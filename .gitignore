@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Packaged extension archives (built by `npm run package`)
+*.ablx
+
+# Local environment — per-machine paths (see README)
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# Vite
+.vite/
+
+# Test coverage
+coverage/
+
+# OS files
+.DS_Store
+._*
+Thumbs.db
+desktop.ini
+
+# Editors
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+*.swp
+*~

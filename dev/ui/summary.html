@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>EasyBounce</title>
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background: #2b2b2b;
+        color: #e2e2e2;
+        font: 12px/1.5 -apple-system, "Segoe UI", system-ui, sans-serif;
+      }
+      main { flex: 1; padding: 16px; overflow-y: auto; }
+      h1 { font-size: 14px; margin: 0 0 8px; }
+      .dim { color: #9a9a9a; }
+      ul { margin: 8px 0 0; padding-left: 18px; }
+      li { margin-bottom: 2px; }
+      .warn { color: #ffcf8f; }
+      footer {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        padding: 10px 16px;
+        border-top: 1px solid #1f1f1f;
+        background: #333;
+      }
+      button {
+        background: #3b3b3b;
+        color: #e2e2e2;
+        border: 1px solid #1f1f1f;
+        border-radius: 3px;
+        padding: 5px 12px;
+        font: inherit;
+        cursor: pointer;
+      }
+      button.primary { background: #ff8c00; color: #1a1a1a; border-color: #c96f00; font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <main id="body"></main>
+    <footer>
+      <button id="reveal" hidden>Show in folder</button>
+      <button id="close" class="primary">Close</button>
+    </footer>
+
+    <script>
+      const summary = JSON.parse(decodeURIComponent("__SUMMARY__"));
+
+      function post(result) {
+        const message = { method: "close_and_send", params: [result] };
+        if (window.webkit?.messageHandlers?.live) {
+          window.webkit.messageHandlers.live.postMessage(message);
+        } else if (window.chrome?.webview) {
+          window.chrome.webview.postMessage(message);
+        }
+      }
+
+      function escape(text) {
+        return String(text).replace(
+          /[&<>]/g,
+          (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[character],
+        );
+      }
+
+      const parts = [];
+      if (summary.message) {
+        parts.push(`<h1>EasyBounce</h1><p>${escape(summary.message)}</p>`);
+      } else {
+        const count = summary.written.length;
+        parts.push(
+          `<h1>${summary.cancelled ? "Cancelled" : "Done"} — ${count} file${count === 1 ? "" : "s"} written</h1>`,
+        );
+        parts.push(`<p class="dim">${escape(summary.outputDir)}</p>`);
+        if (count > 0) {
+          parts.push(`<ul>${summary.written.map((n) => `<li>${escape(n)}</li>`).join("")}</ul>`);
+        }
+        const list = (title, entries) =>
+          entries.length === 0
+            ? ""
+            : `<p class="warn">${title}</p><ul class="warn">${entries
+                .map((e) => `<li>${escape(e.name)} — ${escape(e.reason)}</li>`)
+                .join("")}</ul>`;
+        parts.push(list("Not written:", summary.skipped));
+        parts.push(list("Worth knowing:", summary.notes ?? []));
+        document.getElementById("reveal").hidden = count === 0;
+      }
+      document.getElementById("body").innerHTML = parts.join("");
+
+      document.getElementById("close").addEventListener("click", () => post("ok"));
+      document.getElementById("reveal").addEventListener("click", () => post("reveal"));
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" || event.key === "Enter") post("ok");
+      });
+    </script>
+  </body>
+</html>
