@@ -6,7 +6,9 @@ dist/
 *.tsbuildinfo
 
 # Packaged extension archives (built by `npm run package`)
+# Only the release copy in packaged/ is committed
 *.ablx
+!/packaged/*.ablx
 
 # Local environment — per-machine paths (see README)
 .env

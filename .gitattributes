@@ -32,3 +32,9 @@ package-lock.json  text -diff linguist-generated=true
 
 # Vendored SDK tarballs are required by package.json (file: deps) — keep, but mark as vendored
 vendor/**  linguist-vendored=true
+
+# "Download ZIP" / source archives contain only the packaged extension
+/dev            export-ignore
+/README.md      export-ignore
+/.gitignore     export-ignore
+/.gitattributes export-ignore
