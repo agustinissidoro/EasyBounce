@@ -1,4 +1,4 @@
-# EasyBounce
+# Easy Bounce
 
 An Ableton Live extension that bounces every clip on a track to its own audio
 file. Right-click a clip, a track header, or an arrangement time selection to
