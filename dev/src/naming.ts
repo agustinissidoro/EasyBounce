@@ -1,5 +1,5 @@
-import * as fs from "node:fs";
 import * as path from "node:path";
+import { pathExists } from "./sandbox.js";
 import type { BounceOptions, BounceTarget } from "./types.js";
 
 const ILLEGAL = /[<>:"/\\|?*\u0000-\u001f]/g;
@@ -59,19 +59,10 @@ function uniquePath(
 ): string {
   let candidate = `${base}.${extension}`;
   let counter = 2;
-  while (taken.has(candidate.toLowerCase()) || exists(path.join(dir, candidate))) {
+  while (taken.has(candidate.toLowerCase()) || pathExists(path.join(dir, candidate))) {
     candidate = `${base} ${counter}.${extension}`;
     counter += 1;
   }
   taken.add(candidate.toLowerCase());
   return path.join(dir, candidate);
-}
-
-function exists(file: string): boolean {
-  try {
-    fs.accessSync(file);
-    return true;
-  } catch {
-    return false;
-  }
 }

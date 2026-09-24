@@ -99,7 +99,9 @@ export async function processRenderedFile(
     ...buildPadFilters(options),
   ];
 
-  const args = ["-y", "-i", input];
+  // Names are chosen to be free, so never clobber: if the file appeared since,
+  // failing is better than silently overwriting someone's bounce.
+  const args = ["-n", "-i", input];
   if (filters.length > 0) args.push("-af", filters.join(","));
   args.push(...encoderArgs(options.output.format, options.output.depth));
   if (options.output.sampleRate > 0) {
