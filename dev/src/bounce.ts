@@ -3,6 +3,7 @@ import * as path from "node:path";
 import type { AudioTrack, ExtensionContext } from "@ableton-extensions/sdk";
 import { processRenderedFile } from "./audio.js";
 import { findFfmpeg } from "./ffmpeg.js";
+import { makeDirectory } from "./sandbox.js";
 import { buildFileNames } from "./naming.js";
 import type { BounceOptions, BounceTarget, Format } from "./types.js";
 
@@ -48,7 +49,7 @@ export async function runBounce(
   signal: AbortSignal,
 ): Promise<BounceSummary> {
   const ffmpeg = findFfmpeg(ffmpegPath || undefined);
-  fs.mkdirSync(options.outputDir, { recursive: true });
+  makeDirectory(options.outputDir);
 
   const names = buildFileNames(
     jobs.map((job) => job.target),

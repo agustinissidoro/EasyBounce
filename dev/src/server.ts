@@ -1,6 +1,6 @@
 import { execFile } from "node:child_process";
 import * as crypto from "node:crypto";
-import * as fs from "node:fs";
+import { isDirectory as isExistingDirectory, isWritableDirectory } from "./sandbox.js";
 import { Buffer } from "node:buffer";
 import * as http from "node:http";
 import type { AddressInfo } from "node:net";
@@ -120,23 +120,12 @@ function json(response: http.ServerResponse, status: number, body: unknown): voi
 }
 
 function isDirectory(dir: string): boolean {
-  try {
-    return dir.length > 0 && fs.statSync(dir).isDirectory();
-  } catch {
-    return false;
-  }
+  return dir.length > 0 && isExistingDirectory(dir);
 }
 
 /** Whether the directory exists or could be created on the spot. */
 function canCreate(dir: string): boolean {
-  if (isDirectory(dir)) {
-    try {
-      fs.accessSync(dir, fs.constants.W_OK);
-      return true;
-    } catch {
-      return false;
-    }
-  }
+  if (isDirectory(dir)) return isWritableDirectory(dir);
   return dir.startsWith("/") || /^[a-zA-Z]:[\\/]/.test(dir);
 }
 

@@ -1,6 +1,6 @@
 import { execFile } from "node:child_process";
-import * as fs from "node:fs";
 import * as path from "node:path";
+import { isExecutableFile } from "./sandbox.js";
 
 /** Places Homebrew, MacPorts and the common Windows installers put ffmpeg. */
 const CANDIDATE_DIRS = [
@@ -46,12 +46,7 @@ export function findFfmpeg(override?: string): string {
 }
 
 function isExecutable(file: string): boolean {
-  try {
-    fs.accessSync(file, fs.constants.X_OK);
-    return fs.statSync(file).isFile();
-  } catch {
-    return false;
-  }
+  return isExecutableFile(file);
 }
 
 /**
