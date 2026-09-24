@@ -96,7 +96,7 @@ async function bounceCommand(
 ): Promise<void> {
   const scope = resolveScope(context, argument);
   if (scope.tracks.length === 0) {
-    await showMessage(context, "EasyBounce needs an audio track — MIDI tracks have to be frozen or resampled first.");
+    await showMessage(context, "Easy Bounce needs an audio track — MIDI tracks have to be frozen or resampled first.");
     return;
   }
 

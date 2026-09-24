@@ -1,6 +1,6 @@
 {
-    "name": "easybounce",
-    "author": "Agustín Issidoro",
+    "name": "Easy Bounce",
+    "author": "Agustin Issidoro",
     "entry": "dist/extension.js",
     "version": "1.0.0",
     "minimumApiVersion": "1.0.0"
